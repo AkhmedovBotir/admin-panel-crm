@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Pagination from '../components/Pagination';
 
 const Employees = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +13,8 @@ const Employees = () => {
   const [filterRole, setFilterRole] = useState('');
   const [filterDepartment, setFilterDepartment] = useState('');
   const [filterPosition, setFilterPosition] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Mavjud lavozimlar ro'yxati
   const positions = [
@@ -160,6 +163,17 @@ const Employees = () => {
     return matchesSearch && matchesRole && matchesDepartment && matchesPosition
   });
 
+  // Pagination uchun ma'lumotlarni filtrlash
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredEmployees.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
+
+  // Sahifani o'zgartirish
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-4">
       {/* Header */}
@@ -287,8 +301,8 @@ const Employees = () => {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Xodimlar jadvali */}
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -313,7 +327,7 @@ const Employees = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredEmployees.map((employee) => (
+            {currentItems.map((employee) => (
               <tr key={employee.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -372,6 +386,15 @@ const Employees = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {filteredEmployees.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       {/* Add Modal */}
       {isModalOpen && (

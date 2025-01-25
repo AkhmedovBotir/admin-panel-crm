@@ -9,6 +9,9 @@ import Sidebar from './components/dashboard/Sidebar'
 import TopNav from './components/dashboard/TopNav'
 import Employees from './pages/Employees'
 import NotFound from './pages/NotFound'
+import Services from './pages/Services'
+import Applications from './pages/Applications'
+import CreateApplication from './pages/CreateApplication'
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -73,6 +76,27 @@ function App() {
       <Route path="/employees" element={
         <PrivateRoute>
           <Employees />
+        </PrivateRoute>
+      } />
+
+      {/* Services route (himoyalangan) */}
+      <Route path="/services" element={
+        <PrivateRoute>
+          <Services />
+        </PrivateRoute>
+      } />
+
+      {/* Applications route (himoyalangan) */}
+      <Route path="/applications" element={
+        <PrivateRoute>
+          <Applications />
+        </PrivateRoute>
+      } />
+
+      {/* Create Application route (himoyalangan) */}
+      <Route path="/applications/create" element={
+        <PrivateRoute>
+          <CreateApplication />
         </PrivateRoute>
       } />
 

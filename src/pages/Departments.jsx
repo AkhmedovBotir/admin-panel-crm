@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Pagination from '../components/Pagination';
 
 const Departments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -16,6 +17,8 @@ const Departments = () => {
   ])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedEmployee, setSelectedEmployee] = useState('')
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Mavjud xodimlar ro'yxati (keyinchalik API dan olinadi)
   const allEmployees = [
@@ -120,6 +123,17 @@ const Departments = () => {
     dept.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  // Pagination uchun ma'lumotlarni filtrlash
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredDepartments.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredDepartments.length / itemsPerPage);
+
+  // Sahifani o'zgartirish
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-4">
       {/* Header */}
@@ -174,7 +188,7 @@ const Departments = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredDepartments.map((department) => (
+            {currentItems.map((department) => (
               <tr key={department.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {department.id}
@@ -267,6 +281,15 @@ const Departments = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {filteredDepartments.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       {/* Ko'rish modali */}
       {isViewModalOpen && selectedDepartment && (

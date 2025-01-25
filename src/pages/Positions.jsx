@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Pagination from '../components/Pagination';
 
 const Positions = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -13,6 +14,8 @@ const Positions = () => {
   const [editingPosition, setEditingPosition] = useState(null)
   const [deletingPosition, setDeletingPosition] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Yangi lavozim qo'shish
   const handleAddPosition = () => {
@@ -68,6 +71,17 @@ const Positions = () => {
     pos.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  // Pagination uchun ma'lumotlarni filtrlash
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredPositions.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredPositions.length / itemsPerPage);
+
+  // Sahifani o'zgartirish
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-4">
       {/* Header */}
@@ -100,7 +114,7 @@ const Positions = () => {
       </div>
 
       {/* Jadval */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -110,7 +124,7 @@ const Positions = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredPositions.map((position) => (
+            {currentItems.map((position) => (
               <tr key={position.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-20">{position.id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -143,6 +157,15 @@ const Positions = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {filteredPositions.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       {/* Yangi lavozim qo'shish modali */}
       {isModalOpen && (
