@@ -12,6 +12,13 @@ import NotFound from './pages/NotFound'
 import Services from './pages/Services'
 import Applications from './pages/Applications'
 import CreateApplication from './pages/CreateApplication'
+import EditApplication from './pages/EditApplication'
+import Suggestions from './pages/Suggestions'
+import CreateSuggestion from './pages/CreateSuggestion'
+import EditSuggestion from './pages/EditSuggestion'
+import Reports from './pages/Reports'
+import CreateReport from './pages/CreateReport'
+import EditReport from './pages/EditReport'
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -97,6 +104,47 @@ function App() {
       <Route path="/applications/create" element={
         <PrivateRoute>
           <CreateApplication />
+        </PrivateRoute>
+      } />
+
+      {/* Edit Application route (himoyalangan) */}
+      <Route path="/applications/:id/edit" element={
+        <PrivateRoute>
+          <EditApplication />
+        </PrivateRoute>
+      } />
+
+      {/* Suggestions routes (himoyalangan) */}
+      <Route path="/suggestions" element={
+        <PrivateRoute>
+          <Suggestions />
+        </PrivateRoute>
+      } />
+      <Route path="/suggestions/create" element={
+        <PrivateRoute>
+          <CreateSuggestion />
+        </PrivateRoute>
+      } />
+      <Route path="/suggestions/:id/edit" element={
+        <PrivateRoute>
+          <EditSuggestion />
+        </PrivateRoute>
+      } />
+
+      {/* Reports routes (himoyalangan) */}
+      <Route path="/reports" element={
+        <PrivateRoute>
+          <Reports />
+        </PrivateRoute>
+      } />
+      <Route path="/reports/create" element={
+        <PrivateRoute>
+          <CreateReport />
+        </PrivateRoute>
+      } />
+      <Route path="/reports/:id/edit" element={
+        <PrivateRoute>
+          <EditReport />
         </PrivateRoute>
       } />
 

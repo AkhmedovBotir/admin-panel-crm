@@ -142,6 +142,8 @@ const Services = () => {
 
   return (
     <div className="p-4">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+
       {/* Header */}
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Xizmatlar</h1>
@@ -486,6 +488,7 @@ const Services = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };

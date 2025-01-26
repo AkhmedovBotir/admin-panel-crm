@@ -176,6 +176,8 @@ const Employees = () => {
 
   return (
     <div className="p-4">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+
       {/* Header */}
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold text-gray-900 mb-4 sm:mb-0">Xodimlar</h1>
@@ -722,6 +724,7 @@ const Employees = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

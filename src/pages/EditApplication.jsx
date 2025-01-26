@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
@@ -23,19 +23,65 @@ const staticEmployees = [
   { id: 3, firstName: "Davron", lastName: "Davronov" }
 ];
 
-function CreateApplication() {
+const staticApplications = [
+  {
+    id: 1,
+    title: "Kompyuter ta'mirlash",
+    description: "Kompyuter ishlamay qoldi",
+    createdDate: "2025-01-24T00:04:07.0690247",
+    updatedDate: "2025-01-24T00:04:07.0690247",
+    code: "APP001",
+    offeringId: 1,
+    createdById: 1,
+    assignedToId: 1,
+    departmentId: 1,
+    status: "SENT",
+    completedWorkId: null,
+    visible: true
+  },
+  {
+    id: 2,
+    title: "Printer sozlash",
+    description: "Printer qog'ozni tishlab qolyapti",
+    createdDate: "2025-01-23T00:04:07.0690247",
+    updatedDate: "2025-01-23T00:04:07.0690247",
+    code: "APP002",
+    offeringId: 2,
+    createdById: 1,
+    assignedToId: 2,
+    departmentId: 2,
+    status: "IN_PROGRESS",
+    completedWorkId: null,
+    visible: true
+  }
+];
+
+function EditApplication() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const quillRef = useRef(null);
   const editorRef = useRef(null);
 
-  const [newApplication, setNewApplication] = useState({
+  const [application, setApplication] = useState({
     title: "",
     description: "",
     code: "",
     offeringId: "",
     departmentId: "",
     assignedToId: "",
+    status: ""
   });
+
+  useEffect(() => {
+    // API o'rniga statik ma'lumotlardan foydalanish
+    const app = staticApplications.find(a => a.id === parseInt(id));
+    if (app) {
+      setApplication(app);
+    } else {
+      toast.error("Ariza topilmadi");
+      navigate("/applications");
+    }
+  }, [id, navigate]);
 
   useEffect(() => {
     if (quillRef.current && !editorRef.current) {
@@ -53,19 +99,21 @@ function CreateApplication() {
         }
       });
 
+      editorRef.current.root.innerHTML = application.description;
+
       editorRef.current.on('text-change', () => {
         const content = editorRef.current.root.innerHTML;
-        setNewApplication(prev => ({
+        setApplication(prev => ({
           ...prev,
           description: content
         }));
       });
     }
-  }, []);
+  }, [application.description]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewApplication((prev) => ({
+    setApplication((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -74,26 +122,17 @@ function CreateApplication() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const currentDate = new Date().toISOString();
+      // API o'rniga console.log
+      console.log("O'zgartirilgan ariza:", {
+        ...application,
+        updatedDate: new Date().toISOString()
+      });
       
-      const newApp = {
-        ...newApplication,
-        id: Math.floor(Math.random() * 1000) + 4,
-        createdDate: currentDate,
-        updatedDate: currentDate,
-        status: "SENT",
-        createdById: 1,
-        completedWorkId: null,
-        visible: true
-      };
-
-      console.log("Yangi ariza:", newApp);
-      
-      toast.success("Ariza muvaffaqiyatli yaratildi");
+      toast.success("Ariza muvaffaqiyatli o'zgartirildi");
       navigate("/applications");
     } catch (error) {
-      console.error("Arizani yaratishda xatolik:", error);
-      toast.error("Arizani yaratishda xatolik yuz berdi");
+      console.error("Arizani o'zgartirishda xatolik:", error);
+      toast.error("Arizani o'zgartirishda xatolik yuz berdi");
     }
   };
 
@@ -102,7 +141,7 @@ function CreateApplication() {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Yangi ariza yaratish</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Arizani tahrirlash</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
@@ -114,7 +153,7 @@ function CreateApplication() {
                 <input
                   type="text"
                   name="title"
-                  value={newApplication.title}
+                  value={application.title}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
@@ -139,7 +178,7 @@ function CreateApplication() {
                   <input
                     type="text"
                     name="code"
-                    value={newApplication.code}
+                    value={application.code}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
@@ -153,7 +192,7 @@ function CreateApplication() {
                   </label>
                   <select
                     name="offeringId"
-                    value={newApplication.offeringId}
+                    value={application.offeringId}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
@@ -173,7 +212,7 @@ function CreateApplication() {
                   </label>
                   <select
                     name="departmentId"
-                    value={newApplication.departmentId}
+                    value={application.departmentId}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
@@ -193,7 +232,7 @@ function CreateApplication() {
                   </label>
                   <select
                     name="assignedToId"
-                    value={newApplication.assignedToId}
+                    value={application.assignedToId}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
@@ -204,6 +243,25 @@ function CreateApplication() {
                         {employee.firstName} {employee.lastName}
                       </option>
                     ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Holat
+                  </label>
+                  <select
+                    name="status"
+                    value={application.status}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Tanlang</option>
+                    <option value="SENT">Yuborilgan</option>
+                    <option value="IN_PROGRESS">Jarayonda</option>
+                    <option value="COMPLETED">Bajarilgan</option>
+                    <option value="REJECTED">Rad etilgan</option>
                   </select>
                 </div>
               </div>
@@ -231,4 +289,4 @@ function CreateApplication() {
   );
 }
 
-export default CreateApplication;
+export default EditApplication;

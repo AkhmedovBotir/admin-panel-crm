@@ -84,6 +84,8 @@ const Positions = () => {
 
   return (
     <div className="p-4">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+
       {/* Header */}
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Lavozimlar</h1>
@@ -332,6 +334,7 @@ const Positions = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }
