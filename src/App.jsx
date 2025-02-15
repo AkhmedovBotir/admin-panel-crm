@@ -4,7 +4,6 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Departments from './pages/Departments'
-import Positions from './pages/Positions'
 import Sidebar from './components/dashboard/Sidebar'
 import TopNav from './components/dashboard/TopNav'
 import Employees from './pages/Employees'
@@ -69,13 +68,6 @@ function App() {
       <Route path="/departments" element={
         <PrivateRoute>
           <Departments />
-        </PrivateRoute>
-      } />
-
-      {/* Positions route (himoyalangan) */}
-      <Route path="/positions" element={
-        <PrivateRoute>
-          <Positions />
         </PrivateRoute>
       } />
 

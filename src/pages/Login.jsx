@@ -1,17 +1,33 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-
+import axios from 'axios';
 const Login = () => {
-  const navigate = useNavigate()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    localStorage.setItem('token', 'demo-token')
-    navigate('/')
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    
+    try {
+      const response = await axios.post('http://213.230.99.253:8080/profile/authorization', {
+        email,
+        password,
+      });
+      
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        navigate('/');
+      } else {
+        setError('Noto‘g‘ri email yoki parol.');
+      }
+    } catch (err) {
+      setError('Kirishda xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.');
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -22,16 +38,16 @@ const Login = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                Username
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
               </label>
               <input
-                id="username"
-                name="username"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
